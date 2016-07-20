@@ -1,0 +1,3645 @@
+using UnityEngine;
+using System.Collections;
+
+public class PlayerMovement : MonoBehaviour {
+
+
+
+
+	public float movementSpeed = 5;
+
+	public bool HammerAnimaActive;
+	public float HammerAnimat;
+
+
+
+	public SpriteRenderer healthBar;
+	public int maxHealth = 200;
+	
+	public int health = 200;
+	private Vector2 healthScale;
+
+	public bool weaponSword;
+	public bool weaponDagger;
+	public bool weaponPistol;
+	public bool weaponBow;
+	public bool weaponHammer;
+	public bool weaponBomb;
+	public bool weaponThrowingknife;
+
+
+	public bool swordInCooldown;
+	public bool pistolInCooldown;
+	public bool bowInCooldown;
+	public bool hammerInCooldown;
+	public bool bombInCooldown;
+	public bool throwingInCooldown;
+	public bool daggerInCooldown;
+
+	public float InvincibleFrames;
+	public bool PlayerHasBeenHit;
+
+
+	public GameObject gameObjectt;
+
+
+	public float timer;
+	public float timerr;
+	public float timer1;
+	public float timerr2;
+	public float timer3;
+	public float timerr4;
+
+
+	public float timer5;
+	public int timerr6 = 7;
+	public float reloadTimer;
+	public float timerFix;
+
+
+
+	public float beginHammerCool;
+	public float heavyready;
+
+
+
+	public bool SwordAnimaActive;
+	public float SwordAnimat;
+	public float beginSwordCool;
+	public float swordready;
+
+	public bool DaggerAnimaActive;
+	public float DaggerAnimat;
+		public float beginDaggerCool;
+	public float daggerready;
+
+
+
+	//CREATE A PLAYER STATE TO CHANGE EACH TIME PLAYER FINDS A WEAPON 
+
+	Animator anim;
+	// Use this for initialization
+	void Start () {
+	
+		
+		anim = GetComponent<Animator> ();
+	}
+	
+	 //Update is called once per frame
+
+
+
+
+	void Update () {
+ 
+
+
+		//DontDestroyOnLoad (transform.gameObject);
+
+
+		if(HammerAnimaActive == false)
+		{
+			transform.Translate(Vector3.right * movementSpeed * Time.deltaTime * Input.GetAxisRaw("Horizontal"));
+			transform.Translate(Vector3.up * movementSpeed * Time.deltaTime * Input.GetAxisRaw("Vertical"));
+
+		}
+
+	//	if(InvincibleFrames == 1)
+	//	{
+	//		PlayerHasBeenHit = true;
+	//	}
+	//	if(
+
+
+
+
+
+
+
+
+
+
+		//THROWING KNIFE COOL DOWN ANIMATION 
+			if(timer >= 5 && timer < 100)
+		{
+			timer ++;
+			throwingInCooldown = true;
+			if(timer >= 100)
+			{
+				timer = 0;
+				throwingInCooldown = false;
+			}
+		}
+		if (timerr >= 1 && timerr < 100)
+		{
+			timerr ++;
+			if(timerr >= 100)
+			{
+				timerr = 0;
+			}
+		}
+
+		//TIMERS FOR BOW COOLDOWN/ANIMATION
+
+
+		if(timer1 >= 5 && timer1 < 80)
+		{
+			timer1 ++;
+			bowInCooldown = true;
+			if(timer1 >= 80)
+			{
+				timer1 = 0;
+				bowInCooldown = false;
+			}
+		}
+		if (timerr2 >= 1 && timerr2 < 80)
+		{
+			timerr2 ++;
+			if(timerr2 >= 80)
+			{
+				timerr2 = 0;
+			}
+		}
+
+
+		//TIMERS FOR BOMB ANIMATION COOLDOWN
+
+
+		if(timer3 >= 5 && timer3 < 400)
+		{
+			timer3 ++;
+			bombInCooldown = true;
+			if(timer3 >= 400)
+			{
+				timer3 = 0;
+				bombInCooldown = false;
+			}
+		}
+		if (timerr4 >= 1 && timerr4 < 400)
+		{
+			timerr4 ++;
+			if(timerr4 >= 400)
+			{
+				timerr4 = 0;
+			}
+		}
+
+
+
+		//TIMERS FOR PISTOL RELOAD & ANIMATION 
+
+
+		if(timer5 == 1)
+		{
+			timerFix ++;
+		}
+		if(timerFix >= 20)
+		{
+			timerFix = 0;
+			timerr6 --;
+			timer5 = 0;
+		}
+
+		if(timerr6 == 0)
+		{
+			//print("out of ammo");
+			reloadTimer ++;
+			pistolInCooldown = true;
+
+		}
+
+		if(reloadTimer > 150)
+		{
+			//print("reloaded");
+			reloadTimer = 0;
+			timerr6 = 7;
+			pistolInCooldown = false;
+		}
+
+
+
+
+		//TIMER FOR HAMMER SMASH
+
+
+		if(beginHammerCool >= 1)
+		{
+			heavyready ++;
+			hammerInCooldown = true;
+			HammerAnimat++;
+		}
+
+		//print (HammerAnimat);
+	
+
+		if(HammerAnimat >= 100)
+		{
+			HammerAnimaActive = false;
+			HammerAnimat = 0;
+		}
+
+
+		if(heavyready >= 250)
+		{
+			beginHammerCool = 0;
+			heavyready = 0;
+			hammerInCooldown = false;
+		}
+
+
+
+
+
+		if(beginSwordCool >= 1)
+		{
+			swordready ++;
+			swordInCooldown = true;
+			SwordAnimat++;
+		}
+		
+		//print (HammerAnimat);
+		
+		
+		if(SwordAnimat >= 45)
+		{
+			SwordAnimaActive = false;
+			SwordAnimat = 0;
+		}
+		
+		
+		if(swordready >= 90)
+		{
+			beginSwordCool = 0;
+			swordready = 0;
+			SwordAnimat = 0;
+			swordInCooldown = false;
+		}
+
+
+
+
+
+
+
+
+		if(beginDaggerCool >= 1)
+		{
+			daggerready ++;
+			daggerInCooldown = true;
+			DaggerAnimat++;
+		}
+		
+		//print (HammerAnimat);
+		
+		
+		if(DaggerAnimat >= 30)
+		{
+			DaggerAnimaActive = false;
+			DaggerAnimat = 0;
+		}
+		
+		
+		if(daggerready >= 60)
+		{
+			beginDaggerCool = 0;
+			daggerready = 0;
+			DaggerAnimat = 0;
+			daggerInCooldown = false;
+		}
+
+		if(HammerAnimaActive == false && SwordAnimaActive == false && DaggerAnimaActive == false)
+		{
+
+		if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") == 0 && Input.GetAxisRaw ("test2") == 0)
+		{
+			//print("going right");
+			anim.SetInteger("AnimationState", 1);
+		}
+		if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") == 0 && Input.GetAxisRaw ("test2") == 0)
+		{
+			//print("going left");
+			anim.SetInteger("AnimationState", 3);
+		}
+		
+		if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") == 0 && Input.GetAxisRaw ("test2") == 0)
+		{
+			//print("going up");
+			anim.SetInteger("AnimationState", 2);
+		}
+		if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") == 0 && Input.GetAxisRaw ("test2") == 0)
+		{
+			//print("going down");
+			anim.SetInteger("AnimationState", 4);
+		}
+
+
+		// NO MOVEMENT ON EITHER STICK
+		if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") == 0 && Input.GetAxisRaw ("test2") == 0)
+		{
+			//print ("idle");
+			anim.SetInteger("AnimationState", 0);
+		}
+
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+		if(weaponDagger == true && beginDaggerCool < 1 && DaggerAnimaActive == false)
+		{
+
+				//IDLE PLAYER BUT RIGHT STICK MOVEMENT:
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+					//print ("idle & shooting right");
+					anim.SetInteger("AnimationState", 19);
+				beginDaggerCool++;
+				
+				DaggerAnimaActive = true;
+				}
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+				//print ("idle & shooting left");
+				anim.SetInteger("AnimationState", 20);
+				beginDaggerCool++;
+				
+				DaggerAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print ("idle & shooting up");
+				anim.SetInteger("AnimationState", 24);
+				beginDaggerCool++;
+				DaggerAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print ("idle & shooting down");
+				anim.SetInteger("AnimationState", 9);
+				beginDaggerCool++;
+					
+					DaggerAnimaActive = true;
+				}
+				
+				
+				
+				
+				//PLAYER MOVING RIGHT AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+				//print("going right & shooting right");
+				anim.SetInteger("AnimationState", 19);
+				beginDaggerCool++;
+				
+				DaggerAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+				//print("going right & shooting left");
+				anim.SetInteger("AnimationState", 20);
+				beginDaggerCool++;
+				
+				DaggerAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+				//print("going right & sooting up");
+				anim.SetInteger("AnimationState", 24);
+				beginDaggerCool++;
+				DaggerAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going right & shooting down");
+				anim.SetInteger("AnimationState", 9);
+				beginDaggerCool++;
+					DaggerAnimaActive = true;
+				}
+				
+				
+				//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+				//print("going left & shooting right");
+				anim.SetInteger("AnimationState", 19);
+				beginDaggerCool++;
+				
+				DaggerAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+				//print("going left & shooting left");
+				anim.SetInteger("AnimationState", 20);
+				beginDaggerCool++;
+				
+				DaggerAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+				//print("going left & shooting up");
+				anim.SetInteger("AnimationState", 24);
+				beginDaggerCool++;
+				DaggerAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going left & shooting down");
+				anim.SetInteger("AnimationState", 9);
+				beginDaggerCool++;
+					DaggerAnimaActive = true;
+				}
+				
+				
+				
+				//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+				//print("going up & shooting right");
+				anim.SetInteger("AnimationState", 19);
+				beginDaggerCool++;
+				
+				DaggerAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+				//print("going up & shooting left");
+				anim.SetInteger("AnimationState", 20);
+				beginDaggerCool++;
+				
+				DaggerAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+				//print("going up & shooting up");
+				anim.SetInteger("AnimationState", 24);
+				beginDaggerCool++;
+				DaggerAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going up & shooting down");
+				anim.SetInteger("AnimationState", 9);
+				beginDaggerCool++;
+					DaggerAnimaActive = true;
+				}
+				
+				
+				//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+				//print("going down & shooting right");
+				anim.SetInteger("AnimationState", 19);
+				beginDaggerCool++;
+				
+				DaggerAnimaActive = true;
+				}
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+				//print("going down & shooting left");
+				anim.SetInteger("AnimationState", 20);
+				beginDaggerCool++;
+				
+				DaggerAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+				//print("going down & shooting up");
+				anim.SetInteger("AnimationState", 24);
+				beginDaggerCool++;
+				DaggerAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going down & shooting down");
+				anim.SetInteger("AnimationState", 9);
+				beginDaggerCool++;
+					DaggerAnimaActive = true;
+				}
+				
+			}
+			
+			
+			if(daggerInCooldown == true && DaggerAnimaActive == false)
+			{
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+					//print ("idle & shooting right");
+					anim.SetInteger("AnimationState", 0);
+				}
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+					//print ("idle & shooting left");
+					anim.SetInteger("AnimationState", 0);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print ("idle & shooting up");
+					anim.SetInteger("AnimationState", 0);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print ("idle & shooting down");
+					anim.SetInteger("AnimationState", 0);
+				}
+				
+				
+				
+				
+				//PLAYER MOVING RIGHT AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+					//print("going right & shooting right");
+					anim.SetInteger("AnimationState", 1);
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+					//print("going right & shooting left");
+					anim.SetInteger("AnimationState", 1);
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print("going right & sooting up");
+					anim.SetInteger("AnimationState", 1);
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going right & shooting down");
+					anim.SetInteger("AnimationState", 1);
+				}
+				
+				
+				//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+					//print("going left & shooting right");
+					anim.SetInteger("AnimationState", 3);
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+					//print("going left & shooting left");
+					anim.SetInteger("AnimationState", 3);
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print("going left & shooting up");
+					anim.SetInteger("AnimationState", 3);
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going left & shooting down");
+					anim.SetInteger("AnimationState", 3);
+				}
+				
+				
+				
+				//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+					//print("going up & shooting right");
+					anim.SetInteger("AnimationState", 2);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+					//print("going up & shooting left");
+					anim.SetInteger("AnimationState", 2);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print("going up & shooting up");
+					anim.SetInteger("AnimationState", 2);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going up & shooting down");
+					anim.SetInteger("AnimationState", 2);
+				}
+				
+				
+				//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+					//print("going down & shooting right");
+					anim.SetInteger("AnimationState", 4);
+				}
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+					//print("going down & shooting left");
+					anim.SetInteger("AnimationState", 4);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print("going down & shooting up");
+					anim.SetInteger("AnimationState", 4);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going down & shooting down");
+					anim.SetInteger("AnimationState", 4);
+				}
+				
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		if(weaponSword == true && beginSwordCool < 1 && SwordAnimaActive == false)
+		{
+				//IDLE PLAYER BUT RIGHT STICK MOVEMENT:
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+				//print ("idle & shooting right");
+				anim.SetInteger("AnimationState", 17);
+					beginSwordCool++;
+				
+				SwordAnimaActive = true;
+				}
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+				//print ("idle & shooting left");
+				anim.SetInteger("AnimationState", 18);
+				beginSwordCool++;
+				SwordAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print ("idle & shooting up");
+				anim.SetInteger("AnimationState", 27);
+				beginSwordCool++;
+				SwordAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print ("idle & shooting down");
+				anim.SetInteger("AnimationState", 8);
+				beginSwordCool++;
+					
+					SwordAnimaActive = true;
+				}
+				
+				
+				
+				
+				//PLAYER MOVING RIGHT AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+				//print("going right & shooting right");
+				anim.SetInteger("AnimationState", 17);
+				beginSwordCool++;
+				
+				SwordAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+				//print("going right & shooting left");
+				anim.SetInteger("AnimationState", 18);
+				beginSwordCool++;
+				SwordAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print("going right & sooting up");
+				anim.SetInteger("AnimationState", 27);
+				beginSwordCool++;
+				SwordAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going right & shooting down");
+				anim.SetInteger("AnimationState", 8);
+				beginSwordCool++;
+				
+				SwordAnimaActive = true;
+				}
+				
+				
+				//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+				//print("going left & shooting right");
+				anim.SetInteger("AnimationState", 17);
+				beginSwordCool++;
+				SwordAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+				//print("going left & shooting left");
+				anim.SetInteger("AnimationState", 18);
+				beginSwordCool++;
+				SwordAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print("going left & shooting up");
+				anim.SetInteger("AnimationState", 27);
+				beginSwordCool++;
+				SwordAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going left & shooting down");
+				anim.SetInteger("AnimationState", 8);
+				beginSwordCool++;
+					SwordAnimaActive = true;
+				}
+				
+				
+				
+				//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+				//print("going up & shooting right");
+				anim.SetInteger("AnimationState", 17);
+				beginSwordCool++;
+				SwordAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+					//print("going up & shooting left");
+				anim.SetInteger("AnimationState", 18);
+				beginSwordCool++;
+				SwordAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print("going up & shooting up");
+				anim.SetInteger("AnimationState", 27);
+				beginSwordCool++;
+				SwordAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going up & shooting down");
+				anim.SetInteger("AnimationState", 8);
+				beginSwordCool++;
+					SwordAnimaActive = true;
+				}
+				
+				
+				//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+				//print("going down & shooting right");
+				anim.SetInteger("AnimationState", 17);
+				beginSwordCool++;
+				SwordAnimaActive = true;
+				}
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+				//print("going down & shooting left");
+				anim.SetInteger("AnimationState", 18);
+				beginSwordCool++;
+				SwordAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print("going down & shooting up");
+				anim.SetInteger("AnimationState", 27);
+				beginSwordCool++;
+				SwordAnimaActive = true;
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going down & shooting down");
+				anim.SetInteger("AnimationState", 8);
+				beginSwordCool++;
+					SwordAnimaActive = true;
+				}
+				
+			}
+			
+			
+			if(swordInCooldown == true && SwordAnimaActive == false)
+			{
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+					//print ("idle & shooting right");
+					anim.SetInteger("AnimationState", 0);
+				}
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+					//print ("idle & shooting left");
+					anim.SetInteger("AnimationState", 0);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print ("idle & shooting up");
+					anim.SetInteger("AnimationState", 0);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print ("idle & shooting down");
+					anim.SetInteger("AnimationState", 0);
+				}
+				
+				
+				
+				
+				//PLAYER MOVING RIGHT AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+					//print("going right & shooting right");
+					anim.SetInteger("AnimationState", 1);
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+					//print("going right & shooting left");
+					anim.SetInteger("AnimationState", 1);
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print("going right & sooting up");
+					anim.SetInteger("AnimationState", 1);
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going right & shooting down");
+					anim.SetInteger("AnimationState", 1);
+				}
+				
+				
+				//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+					//print("going left & shooting right");
+					anim.SetInteger("AnimationState", 3);
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+					//print("going left & shooting left");
+					anim.SetInteger("AnimationState", 3);
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print("going left & shooting up");
+					anim.SetInteger("AnimationState", 3);
+				}
+				
+				if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going left & shooting down");
+					anim.SetInteger("AnimationState", 3);
+				}
+				
+				
+				
+				//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+					//print("going up & shooting right");
+					anim.SetInteger("AnimationState", 2);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+					//print("going up & shooting left");
+					anim.SetInteger("AnimationState", 2);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print("going up & shooting up");
+					anim.SetInteger("AnimationState", 2);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going up & shooting down");
+					anim.SetInteger("AnimationState", 2);
+				}
+				
+				
+				//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+				
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+				{
+					//print("going down & shooting right");
+					anim.SetInteger("AnimationState", 4);
+				}
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+				{
+					//print("going down & shooting left");
+					anim.SetInteger("AnimationState", 4);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+				{
+					//print("going down & shooting up");
+					anim.SetInteger("AnimationState", 4);
+				}
+				
+				if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+				{
+					//print("going down & shooting down");
+					anim.SetInteger("AnimationState", 4);
+				}
+				
+			}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		if(weaponBomb == true && timer3 < 5)
+		{
+			//IDLE RIGHT STICK MOVEMENT
+				
+				if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print ("idle & shooting right");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 13);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					timerr4++;
+					//print ("should work1");
+				}
+				timer3++;
+			}
+			
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print ("idle & shooting left");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 14);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work2");
+				}
+				timer3++;
+			}
+			
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print ("idle & shooting up");
+				if(timerr4 == 0)
+				{
+					
+					anim.SetInteger("AnimationState", 26);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work3");
+					
+				}
+				
+				timer3++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				if(timerr4 == 0)
+				{
+					//print ("idle & shooting down");
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					anim.SetInteger("AnimationState", 10);
+					timerr4++;
+					//print ("should work4");
+				}
+				
+				timer3++;
+			}
+			
+			
+			//MOVING RIGHT RIGHT STICK ANIMS
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				if(timerr4 == 0)
+				{
+					//print("going right & shooting right");
+					anim.SetInteger("AnimationState", 13);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work1");
+				}
+				
+				timer3++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going right & shooting left");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 14);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work2");
+				}
+				
+				timer3++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going right & shooting up");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 26);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work3");
+				}
+				
+				timer3++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going right & shooting down");
+				if(timerr4 == 0)
+				{
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					anim.SetInteger("AnimationState", 10);
+					timerr4++;
+					//print ("should work4");
+				}
+				
+				timer3++;
+			}
+			
+			//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+			
+			
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going left & shooting right");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 13);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work1");
+				}
+				
+				timer3++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going left & shooting left");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 14);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work2");
+					
+				}
+				
+				timer3++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going left & shooting up");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 26);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work3");
+				}
+				
+				timer3++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going left & shooting down");
+				if(timerr4 == 0)
+				{
+
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					timerr4++;
+					anim.SetInteger("AnimationState", 10);
+					//print ("should work4");
+				}
+				
+				timer3++;
+			}
+			
+			
+			//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going up & shooting right");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 13);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work1");
+				}
+				
+				timer3++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going up & shooting left");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 14);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work2");
+				}
+				
+				timer3++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going up & shooting up");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 26);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work3");
+				}
+				
+				timer3++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going up & shooting down");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 10);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work4");
+				}
+				
+				timer3++;
+			}
+			
+			
+			
+			//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				
+				if(timerr4 == 0)
+				{
+					//print("going down & shooting right")
+					anim.SetInteger("AnimationState", 13);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work1");
+				}
+				
+				timer3++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going down & shooting left");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 14);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work2");
+				}
+				
+				timer3++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going down & shooting up");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 26);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr4++;
+					//print ("should work3");
+				}
+				
+				timer3++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going down & shooting down");
+				if(timerr4 == 0)
+				{
+					anim.SetInteger("AnimationState", 10);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Bomb"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					timerr4++;
+					//print ("should work4");
+				}
+				
+				timer3++;
+			}
+			
+		}
+
+
+
+		if(bombInCooldown == true)
+		{
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print ("idle & shooting right");
+				anim.SetInteger("AnimationState", 0);
+			}
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print ("idle & shooting left");
+				anim.SetInteger("AnimationState", 0);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print ("idle & shooting up");
+				anim.SetInteger("AnimationState", 0);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print ("idle & shooting down");
+				anim.SetInteger("AnimationState", 0);
+			}
+			
+			
+			
+			
+			//PLAYER MOVING RIGHT AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going right & shooting right");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going right & shooting left");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going right & sooting up");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going right & shooting down");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			
+			//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going left & shooting right");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going left & shooting left");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going left & shooting up");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going left & shooting down");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			
+			
+			//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going up & shooting right");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going up & shooting left");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going up & shooting up");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going up & shooting down");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			
+			//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going down & shooting right");
+				anim.SetInteger("AnimationState", 4);
+			}
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going down & shooting left");
+				anim.SetInteger("AnimationState", 4);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going down & shooting up");
+				anim.SetInteger("AnimationState", 4);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going down & shooting down");
+				anim.SetInteger("AnimationState", 4);
+			}
+			
+		}
+
+
+		
+
+		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		if(weaponBow == true && timer1 < 5)
+		{
+
+
+			//IDLE RIGHT STICK MOVEMENT
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print ("idle & shooting right");
+				if(timerr2 == 0)
+				{
+					anim.SetInteger("AnimationState", 11);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					timerr2++;
+					//print ("should work1");
+				}
+				timer1++;
+			}
+			
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print ("idle & shooting left");
+				if(timerr2 == 0)
+				{
+					anim.SetInteger("AnimationState", 12);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,180)) as GameObject;
+					
+					timerr2++;
+					//print ("should work2");
+				}
+				timer1++;
+			}
+			
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print ("idle & shooting up");
+				if(timerr2 == 0)
+				{
+					anim.SetInteger("AnimationState", 25);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,90)) as GameObject;
+					
+					timerr2++;
+					//print ("should work3");
+					
+				}
+				
+				timer1++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				if(timerr2 == 0)
+				{
+					//print ("idle & shooting down");
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,270)) as GameObject;
+					
+					timerr2++;
+					anim.SetInteger("AnimationState", 5);
+				}
+				
+				timer1++;
+			}
+			
+			
+			//MOVING RIGHT RIGHT STICK ANIMS
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				if(timerr2 == 0)
+				{
+					//print("going right & shooting right");
+					anim.SetInteger("AnimationState", 11);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr2++;
+					//print ("should work1");
+				}
+				
+				timer1++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going right & shooting left");
+				if(timerr2 == 0)
+				{
+					anim.SetInteger("AnimationState", 12);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,180)) as GameObject;
+					
+					timerr2++;
+					//print ("should work2");
+				}
+				
+				timer1++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going right & shooting up");
+				if(timerr2 == 0)
+				{
+					anim.SetInteger("AnimationState", 25);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,90)) as GameObject;
+					
+					timerr2++;
+					//print ("should work3");
+				}
+				
+				timer1++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going right & shooting down");
+				if(timerr2 == 0)
+				{
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,270)) as GameObject;
+					
+					timerr2++;
+					
+					anim.SetInteger("AnimationState", 5);
+				}
+				
+				timer1++;
+			}
+			
+			//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+			
+			
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going left & shooting right");
+				if(timerr2 == 0)
+				{
+					anim.SetInteger("AnimationState", 11);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr2++;
+					//print ("should work1");
+				}
+				
+				timer1++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going left & shooting left");
+				if(timerr2 == 0)
+				{
+					anim.SetInteger("AnimationState", 12);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,180)) as GameObject;
+					
+					timerr2++;
+					//print ("should work2");
+					
+				}
+				
+				timer1++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going left & shooting up");
+				if(timerr2 == 0)
+				{
+					anim.SetInteger("AnimationState", 25);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,90)) as GameObject;
+					
+					timerr2++;
+					//print ("should work3");
+				}
+				
+				timer1++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going left & shooting down");
+				if(timerr2 == 0)
+				{
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,270)) as GameObject;
+					timerr2++;
+					anim.SetInteger("AnimationState", 5);
+					//print ("should work4");
+				}
+				
+				timer1++;
+			}
+			
+			
+			//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going up & shooting right");
+				if(timerr2 == 0)
+				{
+					anim.SetInteger("AnimationState", 11);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr2++;
+					//print ("should work1");
+				}
+				
+				timer1++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going up & shooting left");
+				if(timerr2 == 0)
+				{
+					anim.SetInteger("AnimationState", 12);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,180)) as GameObject;
+					
+					timerr2++;
+					//print ("should work2");
+				}
+				
+				timer1++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going up & shooting up");
+				if(timerr2 == 0)
+				{
+					anim.SetInteger("AnimationState", 25);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,90)) as GameObject;
+					
+					timerr2++;
+					//print ("should work3");
+				}
+				
+				timer1++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going up & shooting down");
+				if(timerr2 == 0)
+				{
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,270)) as GameObject;
+					
+					timerr2++;
+					anim.SetInteger("AnimationState", 5);
+					//print ("should work4");
+				}
+				
+				timer1++;
+			}
+			
+			
+			
+			//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				
+				if(timerr2 == 0)
+				{
+					//print("going down & shooting right");
+					anim.SetInteger("AnimationState", 11);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timerr2++;
+					//print ("should work1");
+				}
+				
+				timer1++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going down & shooting left");
+				if(timerr2 == 0)
+				{
+					anim.SetInteger("AnimationState", 12);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,180)) as GameObject;
+					
+					timerr2++;
+					//print ("should work2");
+				}
+				
+				timer1++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going down & shooting up");
+				if(timerr2 == 0)
+				{
+					anim.SetInteger("AnimationState", 25);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,90)) as GameObject;
+					
+					timerr2++;
+					//print ("should work3");
+				}
+				
+				timer1++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going down & shooting down");
+				if(timerr2 == 0)
+				{
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/Arrow"), transform.position, Quaternion.Euler (0,0,270)) as GameObject;
+					timerr2++;
+					anim.SetInteger("AnimationState", 5);
+					//print ("should work4");
+				}
+				
+				timer1++;
+			}
+
+		}
+
+
+
+		if(bowInCooldown == true)
+		{
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print ("idle & shooting right");
+				anim.SetInteger("AnimationState", 0);
+			}
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print ("idle & shooting left");
+				anim.SetInteger("AnimationState", 0);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print ("idle & shooting up");
+				anim.SetInteger("AnimationState", 0);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print ("idle & shooting down");
+				anim.SetInteger("AnimationState", 0);
+			}
+			
+			
+			
+			
+			//PLAYER MOVING RIGHT AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going right & shooting right");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going right & shooting left");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going right & sooting up");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going right & shooting down");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			
+			//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going left & shooting right");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going left & shooting left");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going left & shooting up");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going left & shooting down");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			
+			
+			//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going up & shooting right");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going up & shooting left");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going up & shooting up");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going up & shooting down");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			
+			//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going down & shooting right");
+				anim.SetInteger("AnimationState", 4);
+			}
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going down & shooting left");
+				anim.SetInteger("AnimationState", 4);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going down & shooting up");
+				anim.SetInteger("AnimationState", 4);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going down & shooting down");
+				anim.SetInteger("AnimationState", 4);
+			}
+			
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		if(weaponHammer == true && beginHammerCool < 1 && HammerAnimaActive == false)
+		{
+			//IDLE PLAYER BUT RIGHT STICK MOVEMENT:
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print ("idle & shooting right");
+				anim.SetInteger("AnimationState", 21);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print ("idle & shooting left");
+				anim.SetInteger("AnimationState", 22);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print ("idle & shooting up");
+				anim.SetInteger("AnimationState", 28);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print ("idle & shooting down");
+			anim.SetInteger("AnimationState", 7);
+				beginHammerCool ++;
+				
+				HammerAnimaActive = true;
+			}
+			
+			
+			
+			
+			//PLAYER MOVING RIGHT AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going right & shooting right");
+				anim.SetInteger("AnimationState", 21);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going right & shooting left");
+				anim.SetInteger("AnimationState", 22);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going right & sooting up");
+				anim.SetInteger("AnimationState", 28);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going right & shooting down");
+				anim.SetInteger("AnimationState", 7);
+				beginHammerCool ++;
+				HammerAnimaActive = true;
+			}
+			
+			
+			//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going left & shooting right");
+				anim.SetInteger("AnimationState", 21);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going left & shooting left");
+				anim.SetInteger("AnimationState", 22);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going left & shooting up");
+				anim.SetInteger("AnimationState", 28);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going left & shooting down");
+				anim.SetInteger("AnimationState", 7);
+				beginHammerCool ++;
+				HammerAnimaActive = true;
+			}
+			
+			
+			
+			//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going up & shooting right");
+				anim.SetInteger("AnimationState", 21);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going up & shooting left");
+				anim.SetInteger("AnimationState", 22);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going up & shooting up");
+				anim.SetInteger("AnimationState", 28);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going up & shooting down");
+				anim.SetInteger("AnimationState", 7);
+				beginHammerCool ++;
+				HammerAnimaActive = true;
+			}
+			
+			
+			//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going down & shooting right");
+				anim.SetInteger("AnimationState", 21);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going down & shooting left");
+				anim.SetInteger("AnimationState", 22);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going down & shooting up");
+				anim.SetInteger("AnimationState", 28);
+				HammerAnimaActive = true;
+				beginHammerCool ++;
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going down & shooting down");
+				anim.SetInteger("AnimationState", 7);
+				beginHammerCool ++;
+				HammerAnimaActive = true;
+			}
+			
+		}
+
+
+		if(hammerInCooldown == true && HammerAnimaActive == false)
+		{
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print ("idle & shooting right");
+				anim.SetInteger("AnimationState", 0);
+			}
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print ("idle & shooting left");
+				anim.SetInteger("AnimationState", 0);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print ("idle & shooting up");
+				anim.SetInteger("AnimationState", 0);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print ("idle & shooting down");
+				anim.SetInteger("AnimationState", 0);
+			}
+			
+			
+			
+			
+			//PLAYER MOVING RIGHT AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going right & shooting right");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going right & shooting left");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going right & sooting up");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going right & shooting down");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			
+			//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going left & shooting right");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going left & shooting left");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going left & shooting up");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going left & shooting down");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			
+			
+			//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going up & shooting right");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going up & shooting left");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going up & shooting up");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going up & shooting down");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			
+			//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going down & shooting right");
+				anim.SetInteger("AnimationState", 4);
+			}
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going down & shooting left");
+				anim.SetInteger("AnimationState", 4);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going down & shooting up");
+				anim.SetInteger("AnimationState", 4);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going down & shooting down");
+				anim.SetInteger("AnimationState", 4);
+			}
+			
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+		if(weaponPistol == true && pistolInCooldown == false)
+		{
+			
+			//IDLE RIGHT STICK MOVEMENT
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print ("idle & shooting right");
+				if(timer5 == 0)
+				{
+					//anim.SetInteger("AnimationState",1);
+					
+					anim.SetInteger("AnimationState", 15);
+						gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-90)) as GameObject;
+					timer5 ++;
+				}
+					//print ("should work1");
+
+			}
+			
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print ("idle & shooting left");
+				if(timer5 == 0)
+				{
+					//anim.SetInteger("AnimationState", 3);
+					anim.SetInteger("AnimationState", 16);
+						gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-270)) as GameObject;
+					timer5 ++;
+				}
+					//print ("should work2");
+			}
+			
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print ("idle & shooting up");
+				if(timer5 == 0)
+				{
+					anim.SetInteger("AnimationState", 23);
+					//anim.SetInteger("AnimationState", 2);
+				gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					timer5 ++;
+				}
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				if(timer5 == 0)
+				{
+					
+					anim.SetInteger("AnimationState", 6);
+				gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-180)) as GameObject;
+					timer5 ++;
+				}
+
+			}
+			
+			
+			//MOVING RIGHT RIGHT STICK ANIMS
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				if(timer5 == 0)
+				{
+					anim.SetInteger("AnimationState", 15);
+					//print("going right & shooting right");
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-90)) as GameObject;
+					
+					timer5++;
+					//print ("should work1");
+				}
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going right & shooting left");
+				if(timer5 == 0)
+				{
+					anim.SetInteger("AnimationState", 16);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-270)) as GameObject;
+					
+					timer5++;
+					//print ("should work2");
+				}
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going right & shooting up");
+				if(timer5 == 0)
+				{
+					anim.SetInteger("AnimationState", 23);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timer5++;
+					//print ("should work3");
+				}
+
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going right & shooting down");
+				if(timer5 == 0)
+				{
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-180)) as GameObject;
+					
+					timer5++;
+					anim.SetInteger("AnimationState", 6);
+					//print ("should work4");
+				}
+			}
+			
+			//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+			
+			
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going left & shooting right");
+				if(timer5 == 0)
+				{
+					anim.SetInteger("AnimationState", 15);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-90)) as GameObject;
+					
+					timer5++;
+					//print ("should work1");
+				}
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going left & shooting left");
+				if(timer5 == 0)
+				{
+					anim.SetInteger("AnimationState", 16);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-270)) as GameObject;
+					
+					timer5++;
+					//print ("should work2");
+					
+				}
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going left & shooting up");
+				if(timer5 == 0)
+				{
+					anim.SetInteger("AnimationState", 23);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timer5++;
+					//print ("should work3");
+				}
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going left & shooting down");
+				if(timer5 == 0)
+				{
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-180)) as GameObject;
+					timer5++;
+					anim.SetInteger("AnimationState", 6);
+					//print ("should work4");
+				}
+			}
+			
+			
+			//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going up & shooting right");
+				if(timer5 == 0)
+				{
+					anim.SetInteger("AnimationState", 15);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-90)) as GameObject;
+					
+					timer5++;
+					//print ("should work1");
+				}
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going up & shooting left");
+				if(timer5 == 0)
+				{
+					anim.SetInteger("AnimationState", 16);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-270)) as GameObject;
+					
+					timer5++;
+					//print ("should work2");
+				}
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going up & shooting up");
+				if(timer5 == 0)
+				{
+					anim.SetInteger("AnimationState", 23);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timer5++;
+					//print ("should work3");
+				}
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going up & shooting down");
+				if(timer5 == 0)
+				{
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-180)) as GameObject;
+					
+					timer5++;
+					anim.SetInteger("AnimationState", 6);
+					//print ("should work4");
+				}
+			}
+			
+			
+			
+			//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				
+				if(timer5 == 0)
+				{	
+					anim.SetInteger("AnimationState", 15);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-90)) as GameObject;
+					
+					timer5++;
+					//print ("should work1");
+				}
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going down & shooting left");
+				if(timer5 == 0)
+				{
+					anim.SetInteger("AnimationState", 16);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-270)) as GameObject;
+					
+					timer5++;
+					//print ("should work2");
+				}
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going down & shooting up");
+				if(timer5 == 0)
+				{
+					anim.SetInteger("AnimationState", 23);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+					
+					timer5++;
+					//print ("should work3");
+				}
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going down & shooting down");
+				if(timer5 == 0)
+				{
+					
+					anim.SetInteger("AnimationState", 6);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/bullet"), transform.position, Quaternion.Euler (0,0,-180)) as GameObject;
+					timer5++;
+					//print ("should work4");
+				}
+			}
+
+
+			
+			
+			
+		}
+
+		
+		
+		if(pistolInCooldown == true)
+		{
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			
+			
+			
+			//PLAYER MOVING RIGHT AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			
+			//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			
+			
+			//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			
+			//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//PLAY RELOAD ANIMATION
+				//print ("reload animation");
+			}
+			
+		}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+		if(weaponThrowingknife == true && timer < 5)
+		{
+
+			//IDLE RIGHT STICK MOVEMENT
+
+						if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+						{
+							//print ("idle & shooting right");
+								if(timerr == 0)
+								{
+
+					
+					anim.SetInteger("AnimationState", 13);
+									gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-90)) as GameObject;
+					timerr++;
+									//print ("should work1");
+								}
+				timer++;
+						}
+
+
+						if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+						{
+							//print ("idle & shooting left");
+							if(timerr == 0)
+				{
+					anim.SetInteger("AnimationState", 14);
+								gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-270)) as GameObject;
+
+					timerr++;
+								//print ("should work2");
+				}
+				timer++;
+						}
+
+
+						if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+						{
+							//print ("idle & shooting up");
+				if(timerr == 0)
+
+				{
+					
+					anim.SetInteger("AnimationState", 26);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+
+					timerr++;
+							//print ("should work3");
+
+				}
+				
+				timer++;
+						}
+
+						if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+						{
+				if(timerr == 0)
+				{
+							//print ("idle & shooting down");
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-180)) as GameObject;
+
+					timerr++;
+					
+					anim.SetInteger("AnimationState", 10);
+							//print ("should work4");
+				}
+				
+				timer++;
+						}
+
+
+			//MOVING RIGHT RIGHT STICK ANIMS
+
+						if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+						{
+				if(timerr == 0)
+				{
+					//print("going right & shooting right");
+					anim.SetInteger("AnimationState", 13);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-90)) as GameObject;
+
+					timerr++;
+							//print ("should work1");
+				}
+				
+				timer++;
+						}
+
+						if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+						{
+							//print("going right & shooting left");
+				if(timerr == 0)
+				{
+					anim.SetInteger("AnimationState", 14);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-270)) as GameObject;
+
+					timerr++;
+							//print ("should work2");
+				}
+				
+				timer++;
+						}
+
+						if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+						{
+							//print("going right & shooting up");
+				if(timerr == 0)
+				{
+							anim.SetInteger("AnimationState", 26);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+
+					timerr++;
+							//print ("should work3");
+				}
+				
+				timer++;
+						}
+
+						if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+						{
+							//print("going right & shooting down");
+				if(timerr == 0)
+				{
+					anim.SetInteger("AnimationState", 10);
+					gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-180)) as GameObject;
+
+					timerr++;
+							//print ("should work4");
+				}
+				
+				timer++;
+						}
+
+			//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+
+
+
+						if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+						{
+							//print("going left & shooting right");
+				if(timerr == 0)
+				{
+					anim.SetInteger("AnimationState", 13);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-90)) as GameObject;
+
+					timerr++;
+							//print ("should work1");
+				}
+				
+				timer++;
+						}
+
+						if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+						{
+							//print("going left & shooting left");
+				if(timerr == 0)
+				{
+					anim.SetInteger("AnimationState", 14);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-270)) as GameObject;
+
+					timerr++;
+							//print ("should work2");
+
+				}
+				
+				timer++;
+						}
+
+						if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+						{
+							//print("going left & shooting up");
+				if(timerr == 0)
+				{
+							anim.SetInteger("AnimationState", 26);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+
+					timerr++;
+							//print ("should work3");
+				}
+				
+				timer++;
+						}
+
+						if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+						{
+							//print("going left & shooting down");
+				if(timerr == 0)
+				{
+					anim.SetInteger("AnimationState", 10);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-180)) as GameObject;
+					timerr++;
+							//print ("should work4");
+				}
+				
+				timer++;
+						}
+
+
+			//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+			
+						if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+						{
+							//print("going up & shooting right");
+				if(timerr == 0)
+				{
+					anim.SetInteger("AnimationState", 13);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-90)) as GameObject;
+
+					timerr++;
+							//print ("should work1");
+				}
+				
+				timer++;
+						}
+
+						if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+						{
+							//print("going up & shooting left");
+				if(timerr == 0)
+				{
+					anim.SetInteger("AnimationState", 14);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-270)) as GameObject;
+
+					timerr++;
+							//print ("should work2");
+				}
+				
+				timer++;
+						}
+
+						if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+						{
+							//print("going up & shooting up");
+				if(timerr == 0)
+				{
+							anim.SetInteger("AnimationState", 26);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+
+					timerr++;
+							//print ("should work3");
+				}
+				
+				timer++;
+						}
+
+						if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+						{
+							//print("going up & shooting down");
+				if(timerr == 0)
+				{
+					anim.SetInteger("AnimationState", 10);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-180)) as GameObject;
+
+					timerr++;
+							//print ("should work4");
+				}
+				
+				timer++;
+						}
+
+
+
+			//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+			
+						if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+						{
+							
+				if(timerr == 0)
+				{
+					//print("going down & shooting right");
+					anim.SetInteger("AnimationState", 13);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-90)) as GameObject;
+
+					timerr++;
+							//print ("should work1");
+				}
+				
+				timer++;
+						}
+
+						if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+						{
+							//print("going down & shooting left");
+				if(timerr == 0)
+				{
+					anim.SetInteger("AnimationState", 14);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-270)) as GameObject;
+
+					timerr++;
+							//print ("should work2");
+				}
+				
+				timer++;
+						}
+
+						if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+						{
+							//print("going down & shooting up");
+				if(timerr == 0)
+				{
+							anim.SetInteger("AnimationState", 26);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,0)) as GameObject;
+
+					timerr++;
+							//print ("should work3");
+				}
+				
+				timer++;
+						}
+
+						if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+						{
+							//print("going down & shooting down");
+				if(timerr == 0)
+				{
+					anim.SetInteger("AnimationState", 10);
+							gameObjectt = Instantiate (Resources.Load ("Prefabs/throwing knife"), transform.position, Quaternion.Euler (0,0,-180)) as GameObject;
+							timer++;
+					timerr++;
+							//print ("should work4");
+				}
+				
+				timer++;
+						}
+
+
+
+		}
+
+
+		if(throwingInCooldown == true)
+		{
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print ("idle & shooting right");
+				anim.SetInteger("AnimationState", 0);
+			}
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print ("idle & shooting left");
+				anim.SetInteger("AnimationState", 0);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print ("idle & shooting up");
+				anim.SetInteger("AnimationState", 0);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print ("idle & shooting down");
+				anim.SetInteger("AnimationState", 0);
+			}
+			
+			
+			
+			
+			//PLAYER MOVING RIGHT AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going right & shooting right");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going right & shooting left");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going right & sooting up");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going right & shooting down");
+				anim.SetInteger("AnimationState", 1);
+			}
+			
+			
+			//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going left & shooting right");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going left & shooting left");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going left & shooting up");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going left & shooting down");
+				anim.SetInteger("AnimationState", 3);
+			}
+			
+			
+			
+			//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going up & shooting right");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going up & shooting left");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going up & shooting up");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going up & shooting down");
+				anim.SetInteger("AnimationState", 2);
+			}
+			
+			
+			//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+			{
+				//print("going down & shooting right");
+				anim.SetInteger("AnimationState", 4);
+			}
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+			{
+				//print("going down & shooting left");
+				anim.SetInteger("AnimationState", 4);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+			{
+				//print("going down & shooting up");
+				anim.SetInteger("AnimationState", 4);
+			}
+			
+			if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+			{
+				//print("going down & shooting down");
+				anim.SetInteger("AnimationState", 4);
+			}
+
+		}
+
+
+
+
+
+
+
+
+		
+		
+		//IDLE PLAYER BUT RIGHT STICK MOVEMENT:
+		if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") > 0.11)
+		{
+			//print ("idle & shooting right");
+		}
+		if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test1") < -0.11)
+		{
+			//print ("idle & shooting left");
+		}
+		
+		if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") > 0.11)
+		{
+			//print ("idle & shooting up");
+		}
+		
+		if(Input.GetAxisRaw ("Vertical") == 0 && Input.GetAxisRaw ("Horizontal") == 0 && Input.GetAxisRaw ("test2") < -0.11)
+		{
+			//print ("idle & shooting down");
+		}
+		
+		
+		
+		
+		//PLAYER MOVING RIGHT AND SHOOTING ALL DIRECTIONS:
+		
+		if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+		{
+			//print("going right & shooting right");
+		}
+		
+		if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+		{
+			//print("going right & shooting left");
+		}
+		
+		if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+		{
+			//print("going right & sooting up");
+		}
+		
+		if(Input.GetAxisRaw ("Horizontal") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+		{
+			//print("going right & shooting down");
+		}
+		
+		
+		//PLAYER MOVING LEFT AND SHOOTING ALL DIRECTIONS:
+		
+		if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+		{
+			//print("going left & shooting right");
+		}
+		
+		if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+		{
+			//print("going left & shooting left");
+		}
+		
+		if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+		{
+			//print("going left & shooting up");
+		}
+		
+		if(Input.GetAxisRaw ("Horizontal") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+		{
+			//print("going left & shooting down");
+		}
+		
+		
+		
+		//PLAYER MOVING UP AND SHOOTING ALL DIRECTIONS:
+		
+		if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") > 0.11)
+		{
+			//print("going up & shooting right");
+		}
+		
+		if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test1") < -0.11)
+		{
+			//print("going up & shooting left");
+		}
+		
+		if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") > 0.11)
+		{
+			//print("going up & shooting up");
+		}
+
+		if(Input.GetAxisRaw ("Vertical") > 0.11 && Input.GetAxisRaw ("test2") < -0.11)
+		{
+			//print("going up & shooting down");
+		}
+		
+		
+		//PLAYER MOVING DOWN AND SHOOTING ALL DIRECTIONS:
+		
+		if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") > 0.11)
+		{
+			//print("going down & shooting right");
+		}
+		if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test1") < -0.11)
+		{
+			//print("going down & shooting left");
+		}
+		
+		if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") > 0.11)
+		{
+			//print("going down & shooting up");
+		}
+		
+		if(Input.GetAxisRaw ("Vertical") < -0.11 && Input.GetAxisRaw ("test2") < -0.11)
+		{
+			//print("going down & shooting down");
+		}
+
+
+	
+	}
+
+
+
+
+	public void AdjustHealth(int amount)
+	{
+		this.health+=amount;
+		
+		if(this.health > this.maxHealth)
+		{
+			this.health = maxHealth;
+		}
+		else if(this.health < 0)
+		{
+			//this.deathFunction();
+		}
+		
+		
+		this.UpdateHealthBar();
+	}
+	
+	
+	public int GetHealth()
+	{
+		return this.health;
+	}
+	
+	private void UpdateHealthBar()
+	{
+		
+		//healthBar.material.color = Color.Lerp (Color.green, Color.red, 1 - this.GetHealth () * 0.01f);
+		
+		//		healthbar.transform.localScale = new Vector3(healthScale.x * this.GetHealth () * 1f, 1, 1);
+		if(health ==195)
+		{
+			healthBar.transform.localScale = new Vector3(0.975f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.45f);
+			//print ("healthDown");
+		}
+		if(health == 190)
+		{
+			healthBar.transform.localScale = new Vector3(0.950f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.40f);
+			//print ("healthDown1");
+		}
+		if(health == 185)
+		{
+			healthBar.transform.localScale = new Vector3(0.925f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.35f);
+		}
+		if(health == 180)
+		{
+			healthBar.transform.localScale = new Vector3(0.9f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.30f);
+		}
+		if(health == 175)
+		{
+			healthBar.transform.localScale = new Vector3(0.875f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.25f);
+		}
+		if(health == 170)
+		{
+			healthBar.transform.localScale = new Vector3(0.850f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.20f);
+		}
+		if(health == 165)
+		{
+			healthBar.transform.localScale = new Vector3(0.825f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.15f);
+		}
+		if(health == 160)
+		{
+			healthBar.transform.localScale = new Vector3(0.8f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.10f);
+		}
+		if(health == 155)
+		{
+			healthBar.transform.localScale = new Vector3(0.775f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.05f);
+		}
+		if(health == 150)
+		{
+			healthBar.transform.localScale = new Vector3(0.750f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.45f);
+			//print ("healthDown");
+		}
+		if(health == 145)
+		{
+			healthBar.transform.localScale = new Vector3(0.725f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.40f);
+			//print ("healthDown1");
+		}
+		if(health == 140)
+		{
+			healthBar.transform.localScale = new Vector3(0.7f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.35f);
+		}
+		if(health == 135)
+		{
+			healthBar.transform.localScale = new Vector3(0.675f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.30f);
+		}
+		if(health == 130)
+		{
+			healthBar.transform.localScale = new Vector3(0.650f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.25f);
+		}
+		if(health == 125)
+		{
+			healthBar.transform.localScale = new Vector3(0.625f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.20f);
+		}
+		if(health == 120)
+		{
+			healthBar.transform.localScale = new Vector3(0.6f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.15f);
+		}
+		if(health == 115)
+		{
+			healthBar.transform.localScale = new Vector3(0.575f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.10f);
+		}
+		if(health == 110)
+		{
+			healthBar.transform.localScale = new Vector3(0.550f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.05f);
+		}
+		if(health == 105)
+		{
+			healthBar.transform.localScale = new Vector3(0.525f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.45f);
+			//print ("healthDown");
+		}
+		if(health == 100)
+		{
+			healthBar.transform.localScale = new Vector3(0.5f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.40f);
+			//print ("healthDown1");
+		}
+		if(health == 95)
+		{
+			healthBar.transform.localScale = new Vector3(0.475f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.35f);
+		}
+		if(health == 90)
+		{
+			healthBar.transform.localScale = new Vector3(0.450f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.30f);
+		}
+		if(health == 85)
+		{
+			healthBar.transform.localScale = new Vector3(0.425f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.25f);
+		}
+		if(health == 80)
+		{
+			healthBar.transform.localScale = new Vector3(0.4f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.20f);
+		}
+		if(health == 75)
+		{
+			healthBar.transform.localScale = new Vector3(0.375f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.15f);
+		}
+		if(health == 70)
+		{
+			healthBar.transform.localScale = new Vector3(0.350f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.10f);
+		}
+		if(health == 65)
+		{
+			healthBar.transform.localScale = new Vector3(0.325f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.05f);
+		}
+		if(health == 60)
+		{
+			healthBar.transform.localScale = new Vector3(0.3f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.45f);
+			//print ("healthDown");
+		}
+		if(health == 55)
+		{
+			healthBar.transform.localScale = new Vector3(0.275f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.40f);
+			//print ("healthDown1");
+		}
+		if(health == 50)
+		{
+			healthBar.transform.localScale = new Vector3(0.250f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.35f);
+		}
+		if(health == 45)
+		{
+			healthBar.transform.localScale = new Vector3(0.225f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.30f);
+		}
+		if(health == 40)
+		{
+			healthBar.transform.localScale = new Vector3(0.2f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.25f);
+		}
+		if(health == 35)
+		{
+			healthBar.transform.localScale = new Vector3(0.175f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.20f);
+		}
+		if(health == 30)
+		{
+			healthBar.transform.localScale = new Vector3(0.150f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.15f);
+		}
+		if(health == 25)
+		{
+			healthBar.transform.localScale = new Vector3(0.125f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.10f);
+		}
+		if(health == 20)
+		{
+			healthBar.transform.localScale = new Vector3(0.1f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.05f);
+		}
+		if(health == 15)
+		{
+			healthBar.transform.localScale = new Vector3(0.075f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.05f);
+		}
+		if(health == 10)
+		{
+			healthBar.transform.localScale = new Vector3(0.050f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.05f);
+		}
+		if(health == 5)
+		{
+			healthBar.transform.localScale = new Vector3(0.025f, 1, 1);
+			//healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.05f);
+		}
+		if(health <= 0)
+		{
+			healthBar.transform.localScale = new Vector3(0.00f, 1, 1);
+			Application.LoadLevel (18);
+			//print ("load game over");
+			//	healthBar.material.color = Color.Lerp (Color.green, Color.red, 0.00f);
+			//print ("player dead");
+		}
+		
+		
+		
+	}
+
+
+
+}
